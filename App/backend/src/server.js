@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+console.log('[boot] NODE_ENV:', process.env.NODE_ENV);
+console.log('[boot] PORT:', process.env.PORT);
+console.log('[boot] MONGODB_URI:', process.env.MONGODB_URI ? 'SET (' + process.env.MONGODB_URI.substring(0, 20) + '...)' : 'NOT SET');
+console.log('[boot] JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'NOT SET');
+
 const http = require('http');
 const app = require('./app');
 const { connectDB } = require('./config/db');
