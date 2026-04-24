@@ -1,0 +1,67 @@
+name: LobosMatch CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: App/backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: App/backend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: App/backend
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ci_test_jwt_secret
+          JWT_REFRESH_SECRET: ci_test_refresh_secret
+          JWT_EXPIRE: 15m
+          JWT_REFRESH_EXPIRE: 7d
+        run: npm test
+
+  build-web:
+    runs-on: ubuntu-latest
+    needs: test-backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          cache-dependency-path: App/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: App/frontend
+        run: npm ci
+
+      - name: Build web
+        working-directory: App/frontend
+        run: npx expo export --platform web
+
+      - name: Upload web build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: App/frontend/dist/

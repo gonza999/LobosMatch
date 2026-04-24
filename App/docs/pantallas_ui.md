@@ -1,0 +1,552 @@
+# Pantallas y UI — TinderApp
+
+Especificación visual de cada pantalla. Componentes, layout, estados e interacciones.
+
+---
+
+## Paleta de Colores
+
+| Nombre | Hex | Uso |
+|--------|-----|-----|
+| Primary | `#FF6B6B` | Botones principales, like, mensajes enviados |
+| Secondary | `#4ECDC4` | Super like, acentos, enlaces |
+| Background | `#FFFFFF` | Fondo principal |
+| BackgroundDark | `#F7F7F7` | Fondo de secciones, tarjetas |
+| Text | `#2D3436` | Texto principal |
+| TextSecondary | `#636E72` | Texto secundario, placeholders |
+| TextLight | `#B2BEC3` | Texto terciario, hints |
+| Error | `#E74C3C` | Errores, alertas |
+| Success | `#27AE60` | Confirmaciones |
+| Dislike | `#95A5A6` | Botón dislike |
+
+---
+
+## 1. LoginScreen
+
+```
+┌─────────────────────────────┐
+│                             │
+│         [Logo App]          │
+│       "TinderApp Local"     │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ 📧 Email              │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ 🔒 Contraseña         │  │
+│  └───────────────────────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   INICIAR SESIÓN      │  │  ← Primary color, full width
+│  └───────────────────────┘  │
+│                             │
+│    ¿Olvidaste tu contraseña?│  ← Link secundario
+│                             │
+│  ─────────── o ───────────  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   CREAR CUENTA        │  │  ← Outlined button
+│  └───────────────────────┘  │
+│                             │
+└─────────────────────────────┘
+```
+
+**Estados:**
+- **Default**: Formulario vacío, botón deshabilitado
+- **Validando**: Botón muestra spinner
+- **Error**: Campos con borde rojo, mensaje de error debajo
+- **Success**: Navega a MainNavigator
+
+**Componentes usados:** `Input`, `Button`, `Loading`
+
+---
+
+## 2. RegisterScreen (Multi-paso)
+
+### Paso 1: Datos Básicos
+```
+┌─────────────────────────────┐
+│  ← Volver     Paso 1 de 4  │
+│                             │
+│    "Cuéntanos sobre ti"     │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ Nombre completo       │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ Email                 │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ Contraseña            │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ Confirmar contraseña  │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ Fecha de nacimiento 📅│  │  ← Date picker nativo
+│  └───────────────────────┘  │
+│                             │
+│  Género:                    │
+│  [Hombre] [Mujer] [Otro]   │  ← Toggle buttons
+│                             │
+│  ┌───────────────────────┐  │
+│  │     SIGUIENTE →        │  │
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+```
+
+### Paso 2: Fotos
+```
+┌─────────────────────────────┐
+│  ← Volver     Paso 2 de 4  │
+│                             │
+│    "Añade tus mejores       │
+│         fotos"              │
+│                             │
+│  ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │     │ │     │ │  +  │  │
+│  │ Foto│ │ Foto│ │     │  │
+│  │  1  │ │  2  │ │ Add │  │
+│  └─────┘ └─────┘ └─────┘  │
+│  ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │  +  │ │  +  │ │  +  │  │
+│  │     │ │     │ │     │  │
+│  │ Add │ │ Add │ │ Add │  │
+│  └─────┘ └─────┘ └─────┘  │
+│                             │
+│  "Mínimo 1 foto, máximo 6" │
+│  "La primera será tu foto   │
+│   principal"                │
+│                             │
+│  ┌───────────────────────┐  │
+│  │     SIGUIENTE →        │  │  ← Disabled si 0 fotos
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+```
+
+### Paso 3: Bio e Intereses
+```
+┌─────────────────────────────┐
+│  ← Volver     Paso 3 de 4  │
+│                             │
+│    "Completa tu perfil"     │
+│                             │
+│  Bio:                       │
+│  ┌───────────────────────┐  │
+│  │                       │  │
+│  │   Cuéntanos algo...   │  │  ← Textarea, max 500
+│  │                       │  │
+│  └───────────────────────┘  │
+│                    234/500  │
+│                             │
+│  Intereses:                 │
+│  [Viajes✓] [Música] [Cine] │
+│  [Deporte] [Cocina✓] [Arte]│
+│  [Tech] [Lectura] [Yoga]   │
+│  [+ Añadir otro]           │
+│                             │
+│  ¿A quién buscas?           │
+│  [Hombres] [Mujeres] [Todos│
+│                             │
+│  ┌───────────────────────┐  │
+│  │     SIGUIENTE →        │  │
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+```
+
+### Paso 4: Ubicación
+```
+┌─────────────────────────────┐
+│  ← Volver     Paso 4 de 4  │
+│                             │
+│       📍                    │
+│                             │
+│  "Necesitamos tu ubicación  │
+│   para mostrarte personas   │
+│   cercanas"                 │
+│                             │
+│  ┌───────────────────────┐  │
+│  │  ACTIVAR UBICACIÓN    │  │  ← Solicita permiso GPS
+│  └───────────────────────┘  │
+│                             │
+│  "Tu ubicación solo se usa  │
+│   para encontrar personas   │
+│   en tu zona. Nunca se      │
+│   comparte con otros."      │
+│                             │
+│  ┌───────────────────────┐  │
+│  │  EMPEZAR A EXPLORAR   │  │  ← Primary, submit todo
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+```
+
+---
+
+## 3. ExploreScreen
+
+```
+┌─────────────────────────────┐
+│  TinderApp     [⚙️] [🔔]   │  ← Header con settings y notif
+│                             │
+│  ┌───────────────────────┐  │
+│  │                       │  │
+│  │                       │  │
+│  │    [Foto principal]   │  │  ← SwipeCard apilable
+│  │                       │  │     Gesture: drag L/R/Up
+│  │                       │  │
+│  │                       │  │
+│  │  ─────────────────    │  │
+│  │  Ana, 26         3 km │  │  ← Nombre, edad, distancia
+│  │  "Amante de los..."   │  │  ← Bio truncada
+│  │  [viajes] [foto] [...]│  │  ← Interests tags
+│  └───────────────────────┘  │
+│                             │
+│     [✕]    [★]    [♥]      │  ← Botones: dislike, super, like
+│    gris  turquesa  rojo     │
+│                             │
+│  ═══════════════════════════│
+│  [🧭]  [❤️]  [💬]  [👤]   │  ← Bottom tabs
+│  Explorar Matches Chat Perfil
+└─────────────────────────────┘
+```
+
+**Interacciones:**
+- **Swipe derecha**: Animación tarjeta sale por la derecha + stamp "LIKE" verde
+- **Swipe izquierda**: Animación tarjeta sale por la izquierda + stamp "NOPE" rojo
+- **Swipe arriba**: Animación tarjeta sube + stamp "SUPER LIKE" azul + efecto estrella
+- **Tap en tarjeta**: Expande a vista completa (ver abajo)
+- **Tap en ✕/♥/★**: Mismo efecto que swipe correspondiente
+
+### Vista Expandida de Tarjeta
+```
+┌─────────────────────────────┐
+│  ← Cerrar                  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │                       │  │
+│  │  [Foto 1]  ● ○ ○ ○   │  │  ← Swipe horizontal entre fotos
+│  │                       │  │     Indicadores de posición
+│  └───────────────────────┘  │
+│                             │
+│  Ana, 26                    │
+│  📍 3 km de distancia       │
+│                             │
+│  "Amante de los viajes y    │
+│   la fotografía. Buscando   │
+│   alguien con quien..."     │
+│                             │
+│  Intereses:                 │
+│  [viajes] [fotografía]      │
+│  [cocina] [senderismo]      │
+│                             │
+│     [✕]    [★]    [♥]      │
+└─────────────────────────────┘
+```
+
+### Overlay de Match
+```
+┌─────────────────────────────┐
+│                             │
+│         🎉                  │
+│    "¡Es un Match!"         │
+│                             │
+│   [Tu foto]  [Su foto]     │  ← Ambas fotos con animación
+│                             │
+│  "Tú y Ana os gustáis       │
+│   mutuamente"               │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   ENVIAR MENSAJE      │  │  ← Primary
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │   SEGUIR EXPLORANDO   │  │  ← Secondary/outlined
+│  └───────────────────────┘  │
+│                             │
+└─────────────────────────────┘
+```
+
+---
+
+## 4. MatchesScreen
+
+```
+┌─────────────────────────────┐
+│        Matches              │
+│                             │
+│  Nuevos Matches:            │
+│  ┌────┐ ┌────┐ ┌────┐      │
+│  │foto│ │foto│ │foto│ →     │  ← Scroll horizontal
+│  │Ana │ │Luis│ │Mar │       │     Tap → ChatScreen
+│  └────┘ └────┘ └────┘      │
+│                             │
+│  ─────────────────────────  │
+│                             │
+│  Todos los matches:         │
+│  ┌───────────────────────┐  │
+│  │ [📷] Carlos    hace 2h│  │  ← Lista vertical
+│  │      "¿Cómo estás?"   │  │     Último mensaje + tiempo
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ [📷] María     ayer   │  │
+│  │      "¡Genial!"       │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ [📷] Pedro     3 días │  │
+│  │      Sin mensajes aún │  │  ← Italic, gris
+│  └───────────────────────┘  │
+│                             │
+│  ═══════════════════════════│
+│  [🧭]  [❤️]  [💬]  [👤]   │
+└─────────────────────────────┘
+```
+
+---
+
+## 5. ChatListScreen
+
+```
+┌─────────────────────────────┐
+│         Chats               │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ [📷] Carlos   14:30   │  │
+│  │      "¿Quedamos hoy?" │  │
+│  │                   [2]  │  │  ← Badge unread count
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ [📷] María    ayer    │  │
+│  │      "¡Genial! 😊"    │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ [📷] Ana      lun     │  │
+│  │      Tú: "Hola!"      │  │  ← "Tú:" si fue enviado por mí
+│  └───────────────────────┘  │
+│                             │
+│  (Pull to refresh)          │
+│                             │
+│  ═══════════════════════════│
+│  [🧭]  [❤️]  [💬]  [👤]   │
+└─────────────────────────────┘
+```
+
+---
+
+## 6. ChatScreen
+
+```
+┌─────────────────────────────┐
+│  ← [📷] Carlos        [⋮]  │  ← Header: volver, foto, nombre, menú
+│                             │
+│        24 de abril          │  ← Separador de fecha
+│                             │
+│  ┌──────────────┐           │
+│  │ ¡Hola! ¿Cómo │           │  ← Burbuja recibida (gris, izq)
+│  │ estás?       │           │
+│  └──────────────┘ 14:20     │
+│                             │
+│           ┌──────────────┐  │
+│           │ ¡Hey! Bien,  │  │  ← Burbuja enviada (primary, der)
+│           │ ¿y tú?    ✓✓ │  │     Con checkmarks de lectura
+│           └──────────────┘  │
+│                      14:22  │
+│                             │
+│  ┌──────────────┐           │
+│  │ ¿Quedamos    │           │
+│  │ hoy?         │           │
+│  └──────────────┘ 14:30     │
+│                             │
+│  Carlos está escribiendo... │  ← Indicador typing
+│                             │
+│  ┌───────────────────┐ [➤] │  ← Input + botón enviar
+│  │ Escribe un mensaje│      │
+│  └───────────────────┘      │
+└─────────────────────────────┘
+```
+
+**Menú ⋮:**
+- Ver perfil
+- Reportar
+- Bloquear
+- Deshacer match
+
+**Interacciones:**
+- Scroll up = cargar mensajes anteriores (paginado)
+- Auto-scroll a último mensaje al entrar y recibir
+- Tap en input = teclado aparece, chat se ajusta
+- Typing indicator aparece/desaparece con debounce 2s
+
+---
+
+## 7. ProfileScreen
+
+```
+┌─────────────────────────────┐
+│         Mi Perfil           │
+│                             │
+│         ┌───────┐           │
+│         │       │           │
+│         │ Foto  │           │  ← Foto principal, grande
+│         │ ppal  │           │
+│         └───────┘           │
+│                             │
+│     Ana García, 28          │
+│                             │
+│  "Amante de los viajes y    │
+│   la fotografía 📸"         │
+│                             │
+│  [viajes] [fotografía]      │
+│  [cocina] [senderismo]      │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   ✏️ EDITAR PERFIL     │  │  ← Navega a EditProfileScreen
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │   ⚙️ CONFIGURACIÓN    │  │  ← Navega a SettingsScreen
+│  └───────────────────────┘  │
+│                             │
+│  ═══════════════════════════│
+│  [🧭]  [❤️]  [💬]  [👤]   │
+└─────────────────────────────┘
+```
+
+---
+
+## 8. EditProfileScreen
+
+```
+┌─────────────────────────────┐
+│  ← Volver       Guardar ✓  │
+│                             │
+│  Fotos:                     │
+│  ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │[Foto│ │[Foto│ │  +  │  │
+│  │ 1] ✕│ │ 2] ✕│ │     │  │  ← ✕ para eliminar
+│  └─────┘ └─────┘ └─────┘  │     + para añadir
+│  ┌─────┐ ┌─────┐ ┌─────┐  │     Drag para reordenar
+│  │  +  │ │  +  │ │  +  │  │
+│  └─────┘ └─────┘ └─────┘  │
+│                             │
+│  Bio:                       │
+│  ┌───────────────────────┐  │
+│  │ Amante de los viajes  │  │
+│  │ y la fotografía 📸    │  │
+│  └───────────────────────┘  │
+│                    38/500   │
+│                             │
+│  Intereses:                 │
+│  [viajes✓] [fotografía✓]   │
+│  [cocina✓] [senderismo✓]   │
+│  [música] [cine] [deporte]  │
+│  [+ Añadir]                 │
+│                             │
+└─────────────────────────────┘
+```
+
+---
+
+## 9. SettingsScreen
+
+```
+┌─────────────────────────────┐
+│  ← Configuración            │
+│                             │
+│  Rango de edad:             │
+│  18 ━━━━━━━[●━━━●]━━━━ 99  │  ← Dual slider: 25-35
+│           25     35         │
+│                             │
+│  Distancia máxima:          │
+│  1 ━━━━━[●]━━━━━━━━━━ 50   │  ← Slider: 15 km
+│          15 km              │
+│                             │
+│  Mostrar:                   │
+│  (●) Hombres               │
+│  ( ) Mujeres               │
+│  ( ) Todos                  │
+│                             │
+│  ─────────────────────────  │
+│                             │
+│  Mostrar mi perfil  [●━━]  │  ← Toggle ON/OFF
+│                             │
+│  ─────────────────────────  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   CERRAR SESIÓN       │  │  ← Outlined, rojo
+│  └───────────────────────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   ELIMINAR CUENTA     │  │  ← Text button, rojo
+│  └───────────────────────┘  │
+│                             │
+└─────────────────────────────┘
+```
+
+---
+
+## Responsive — Adaptaciones por Plataforma
+
+### Android (< 480px)
+- Layout estándar como los wireframes de arriba
+- Bottom tabs nativos
+- Gestos nativos (swipe back, etc.)
+
+### Web (480px - 1200px)
+- Mismo layout centrado, max-width 480px
+- Fondo gris fuera del contenedor
+- Sin bottom tabs nativos → tabs en header o sidebar
+
+### Web Desktop / Electron (> 1200px)
+```
+┌──────────────────────────────────────────────────┐
+│  TinderApp Local                                 │
+├──────────┬───────────────────────────────────────┤
+│          │                                       │
+│  [🧭]   │                                       │
+│ Explorar │        Contenido principal            │
+│          │        (pantalla activa)              │
+│  [❤️]   │                                       │
+│ Matches  │        Max width 480px                │
+│          │        centrado                        │
+│  [💬]   │                                       │
+│  Chat    │                                       │
+│          │                                       │
+│  [👤]   │                                       │
+│ Perfil   │                                       │
+│          │                                       │
+├──────────┴───────────────────────────────────────┤
+└──────────────────────────────────────────────────┘
+```
+- Sidebar izquierda con navegación
+- Contenido principal centrado en layout tipo móvil
+- Opción: vista dual Chat (lista + conversación lado a lado)
+
+---
+
+## Componentes Compartidos
+
+### Button
+- Variantes: `primary`, `secondary`, `outlined`, `text`, `danger`
+- Props: `title`, `onPress`, `loading`, `disabled`, `variant`, `icon`
+- Loading state: muestra spinner, deshabilita press
+
+### Input
+- Props: `label`, `value`, `onChangeText`, `error`, `placeholder`, `icon`, `secureTextEntry`, `multiline`
+- Estados: default, focused (borde primary), error (borde rojo + mensaje)
+
+### Avatar
+- Props: `uri`, `size` (sm/md/lg/xl), `online` (indicador verde)
+- Fallback: iniciales del nombre sobre fondo gris
+
+### Loading
+- Spinner centrado con fondo semitransparente
+- Skeleton loader para listas (forma de la tarjeta/item)
+
+### SwipeCard
+- Props: `user`, `onLike`, `onDislike`, `onSuperLike`, `onPress`
+- Usa `react-native-gesture-handler` + `react-native-reanimated`
+- Threshold de swipe: 120px horizontal, 100px vertical
+- Overlay "LIKE"/"NOPE"/"SUPER LIKE" con opacidad proporcional al drag
+
+### MessageBubble
+- Props: `content`, `isMine`, `time`, `readStatus`
+- Burbuja redondeada, color según `isMine`
+- Timestamp debajo, checkmarks si es mío

@@ -1,0 +1,19 @@
+{
+  "appId": "com.lobosmatch.app",
+  "productName": "LobosMatch",
+  "directories": {
+    "output": "electron-dist"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "assets/icon.png"
+  ],
+  "extraMetadata": {
+    "main": "electron/main.js"
+  },
+  "win": {
+    "target": "portable",
+    "icon": "assets/icon.png"
+  }
+}
