@@ -34,8 +34,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-// 2. Helmet — Security headers
-app.use(helmet());
+// 2. Helmet — Security headers (configured to not interfere with CORS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginOpenerPolicy: false,
+}));
 
 // 3. Body parser
 app.use(express.json({ limit: '10mb' }));
@@ -117,6 +120,14 @@ app.use((err, req, res, next) => {
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
     return res.status(409).json({ error: `El ${field} ya está registrado` });
+  }
+
+  // Errores de Multer
+  if (err.name === 'MulterError') {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'La imagen es demasiado grande. Máximo 5MB.' });
+    }
+    return res.status(400).json({ error: `Error al subir archivo: ${err.message}` });
   }
 
   // Errores de JWT
