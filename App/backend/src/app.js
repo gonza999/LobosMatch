@@ -8,19 +8,15 @@ const { AppError, ValidationError } = require('./utils/errors');
 
 const app = express();
 
-// 1. Helmet — Security headers
-app.use(helmet());
-
-// 2. CORS
+// 1. CORS (must be before Helmet and other middleware)
 const allowedOrigins = [
   process.env.CLIENT_URL,
   'http://localhost:8081',
   'http://localhost:19006',
 ].filter(Boolean);
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -28,9 +24,15 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// 2. Helmet — Security headers
+app.use(helmet());
 
 // 3. Body parser
 app.use(express.json({ limit: '10mb' }));
