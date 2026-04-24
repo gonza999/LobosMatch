@@ -7,7 +7,7 @@ const BASE_URL = __DEV__
       android: 'http://10.0.2.2:5000/api',
       default: 'http://localhost:5000/api',
     })
-  : 'https://your-production-url.com/api';
+  : 'https://lobosmatch.onrender.com/api';
 
 const api = axios.create({
   baseURL: BASE_URL,

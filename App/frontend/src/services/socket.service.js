@@ -7,7 +7,7 @@ const SOCKET_URL = __DEV__
       android: 'http://10.0.2.2:5000',
       default: 'http://localhost:5000',
     })
-  : 'https://your-production-url.com';
+  : 'https://lobosmatch.onrender.com';
 
 let socket = null;
 
