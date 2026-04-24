@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
@@ -48,7 +49,11 @@ export default function LoginScreen({ navigation }) {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.logo}>�</Text>
+          <Image
+            source={require('../../../assets/favicon.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
           <Text style={styles.title}>LobosMatch</Text>
           <Text style={styles.subtitle}>Encontrá a alguien especial</Text>
         </View>
@@ -90,6 +95,8 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.registerBold}>Registrate</Text>
           </Text>
         </TouchableOpacity>
+
+        <Text style={styles.creator}>Creador: Gonzalo Misciagna</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
   logo: { fontSize: 64, marginBottom: spacing.sm },
+  logoImage: { width: 80, height: 80, marginBottom: spacing.sm },
   title: { ...typography.h1, color: colors.primary },
   subtitle: { ...typography.caption, color: colors.textSecondary, marginTop: spacing.xs },
   form: {
@@ -134,5 +142,12 @@ const styles = StyleSheet.create({
   registerBold: {
     color: colors.primary,
     fontWeight: '600',
+  },
+  creator: {
+    ...typography.small,
+    color: colors.textLight,
+    textAlign: 'center',
+    marginTop: spacing.xl,
+    fontSize: 11,
   },
 });
