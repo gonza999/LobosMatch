@@ -18,18 +18,30 @@ const server = http.createServer(app);
 initSocket(server);
 
 const start = async () => {
-  await connectDB();
+  try {
+    console.log('[boot] Connecting to MongoDB...');
+    await connectDB();
+    console.log('[boot] MongoDB connected');
 
-  server.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT} (${process.env.NODE_ENV})`);
-  });
+    server.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT} (${process.env.NODE_ENV})`);
+    });
+  } catch (err) {
+    console.error('[boot] FATAL ERROR:', err);
+    process.exit(1);
+  }
 };
 
 start();
 
 // Manejo de errores no capturados
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
 process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err.message);
+  console.error('Unhandled Rejection:', err);
   server.close(() => process.exit(1));
 });
 
