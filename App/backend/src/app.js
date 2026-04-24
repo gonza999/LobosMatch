@@ -32,7 +32,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 // 2. Helmet — Security headers (configured to not interfere with CORS)
 app.use(helmet({
