@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import { colors, typography, spacing } from '../../theme';
 import { Button, Input } from '../../components';
@@ -150,13 +151,47 @@ export default function RegisterScreen({ navigation }) {
 
         {step === 2 && (
           <View style={styles.form}>
-            <Input
-              label="Fecha de Nacimiento"
-              value={form.birthDate}
-              onChangeText={(v) => set('birthDate', v)}
-              placeholder="AAAA-MM-DD"
-              error={errors.birthDate}
-            />
+            <Text style={styles.fieldLabel}>Fecha de Nacimiento</Text>
+            {Platform.OS === 'web' ? (
+              <input
+                type="date"
+                value={form.birthDate}
+                max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]}
+                onChange={(e) => set('birthDate', e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 14,
+                  fontSize: 16,
+                  borderRadius: 12,
+                  border: errors.birthDate ? `1.5px solid ${colors.error}` : `1.5px solid ${colors.border}`,
+                  backgroundColor: colors.surface,
+                  color: colors.text,
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                  marginBottom: 4,
+                }}
+              />
+            ) : (
+              <TouchableOpacity
+                style={[styles.dateButton, errors.birthDate && styles.dateButtonError]}
+                onPress={() => {
+                  // For native, use a simple text input as fallback
+                  // A full native date picker would require @react-native-community/datetimepicker
+                }}
+              >
+                <Input
+                  value={form.birthDate}
+                  onChangeText={(v) => set('birthDate', v)}
+                  placeholder="AAAA-MM-DD"
+                  keyboardType="numeric"
+                  error={errors.birthDate}
+                />
+              </TouchableOpacity>
+            )}
+            {errors.birthDate && Platform.OS === 'web' && (
+              <Text style={styles.errorText}>{errors.birthDate}</Text>
+            )}
 
             <Text style={styles.fieldLabel}>Género</Text>
             <View style={styles.chips}>
