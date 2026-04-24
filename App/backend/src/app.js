@@ -8,6 +8,9 @@ const { AppError, ValidationError } = require('./utils/errors');
 
 const app = express();
 
+// Trust proxy (required for Render, Railway, etc.)
+app.set('trust proxy', 1);
+
 // 1. CORS (must be before Helmet and other middleware)
 const allowedOrigins = [
   process.env.CLIENT_URL,
